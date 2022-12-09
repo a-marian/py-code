@@ -1,21 +1,31 @@
 """
 1026. Maximum Difference Between Node and Ancestor
 """
+class TreeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
 class Solution(object):
 
-    def __init__(self):
-        self.maxDiff = 0
-
-    def maxAncestorDiff(self, root, maxv = 0, minv = 5001):
-        if root == None:
+    def maxAncestorDiff(self, root: TreeNode) -> int:
+        if not root:
             return 0
-        maxv = max(maxv, root.val)
-        minv = min(minv, root.val)
 
-        self.maxDiff = max(self.maxDiff, abs(maxv - minv))
-        self.maxAncestorDiff(root.left, maxv, minv)
-        self.maxAncestorDiff(root.val, maxv, minv)
-        return self.maxDiff
+        def helper(node, cur_max, cur_min):
+            # if encounter leaves, return the max-min along the path
+            if not node:
+                return cur_max - cur_min
+            # else, update max and min
+            # and return the max of left and right subtrees
+            cur_max = max(cur_max, node.val)
+            cur_min = min(cur_min, node.val)
+            left = helper(node.left, cur_max, cur_min)
+            right = helper(node.right, cur_max, cur_min)
+            return max(left, right)
+
+        return helper(root, root.val, root.val)
 
 
 """
@@ -27,9 +37,5 @@ class Solution(object):
   as we need to store one function call for each level of the tree.
   https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/
 """
-class TreeNode(object):
-    def __init__(self, x):
-         self.val = x
-         self.left = None
-         self.right = None
+
 
